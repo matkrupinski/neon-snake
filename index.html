@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEON SNAKE // CYBERPUNK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <div class="app">
+    <header class="hud">
+      <div class="brand">
+        <span class="logo-mark">◈</span>
+        <div>
+          <h1>NEON<span>SNAKE</span></h1>
+          <p class="tag">SECTOR 7 • GRID PROTOCOL</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <span class="label">SCORE</span>
+          <span class="value" id="score">0000</span>
+        </div>
+        <div class="stat accent">
+          <span class="label">RECORD</span>
+          <span class="value" id="highscore">0000</span>
+        </div>
+        <div class="stat">
+          <span class="label">SPEED</span>
+          <span class="value" id="speed">01</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="stage">
+      <div class="frame">
+        <canvas id="game" width="600" height="600" tabindex="0" aria-label="Neon Snake"></canvas>
+        <div class="overlay" id="overlay">
+          <div class="panel" id="panel">
+            <p class="status" id="status">SYSTEM READY</p>
+            <h2 id="title">NEON SNAKE</h2>
+            <p class="hint" id="hint">
+              STRZAŁKI / WASD — ruch<br />
+              SPACJA — pauza / start
+            </p>
+            <button type="button" id="startBtn">INICJUJ SEKWENCJĘ</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>EAT THE CORE • AVOID THE TRACE</span>
+      <span id="statusLine">STAN: GOTOWY</span>
+    </footer>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
