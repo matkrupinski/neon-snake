@@ -262,7 +262,7 @@
     if (!state.running || state.dead) return;
     state.paused = !state.paused;
     if (state.paused) {
-      showOverlay("PAUZA", "TRACE SUSPENDED", "SPACJA — wznów<br/>STRZAŁKI / WASD — sterowanie", "WZNÓW");
+      showOverlay("PAUZA", "TRACE SUSPENDED", "SPACJA / DWUKROTNY TAP \u2014 wzn\u00f3w<br/>SWIPE, TAP W STREF\u0118, STRZA\u0141KI / WASD", "WZN\u00d3W");
       statusLine.textContent = "STAN: PAUZA";
     } else {
       hideOverlay();
@@ -310,6 +310,68 @@
   });
 
   canvas.addEventListener("click", () => canvas.focus());
+
+  function steer(x, y) {
+    if (!state.running && !state.dead) start();
+    else if (state.dead) start();
+    else if (state.paused) {
+      state.paused = false;
+      hideOverlay();
+      statusLine.textContent = "STAN: LIVE TRACE";
+      setDirection(x, y);
+    } else {
+      setDirection(x, y);
+    }
+  }
+
+  function directionFromPoint(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const dx = clientX - (rect.left + rect.width / 2);
+    const dy = clientY - (rect.top + rect.height / 2);
+    if (Math.abs(dx) > Math.abs(dy)) return dx < 0 ? [-1, 0] : [1, 0];
+    return dy < 0 ? [0, -1] : [0, 1];
+  }
+
+  const touch = { x: 0, y: 0, t: 0, lastTap: 0 };
+
+  canvas.addEventListener("touchstart", (e) => {
+    if (!e.changedTouches.length) return;
+    const p = e.changedTouches[0];
+    touch.x = p.clientX;
+    touch.y = p.clientY;
+    touch.t = performance.now();
+  }, { passive: true });
+
+  canvas.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener("touchend", (e) => {
+    if (!e.changedTouches.length) return;
+    e.preventDefault();
+    const p = e.changedTouches[0];
+    const dx = p.clientX - touch.x;
+    const dy = p.clientY - touch.y;
+    const dist = Math.hypot(dx, dy);
+    const now = performance.now();
+
+    if (dist < 24) {
+      if (now - touch.lastTap < 320) {
+        touch.lastTap = 0;
+        if (!state.running) start();
+        else togglePause();
+        return;
+      }
+      touch.lastTap = now;
+      const dir = directionFromPoint(p.clientX, p.clientY);
+      steer(dir[0], dir[1]);
+      return;
+    }
+
+    touch.lastTap = 0;
+    if (Math.abs(dx) > Math.abs(dy)) steer(dx < 0 ? -1 : 1, 0);
+    else steer(0, dy < 0 ? -1 : 1);
+  }, { passive: false });
 
   updateHud();
   render();
