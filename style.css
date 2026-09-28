@@ -153,6 +153,7 @@ h1 span {
   box-shadow:
     0 0 40px rgba(0, 246, 255, 0.18),
     0 0 80px rgba(255, 43, 214, 0.12);
+  touch-action: none;
 }
 
 canvas {
@@ -161,6 +162,7 @@ canvas {
   height: 100%;
   background: #07010f;
   outline: none;
+  touch-action: none;
 }
 
 .overlay {
