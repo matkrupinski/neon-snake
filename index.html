@@ -1,67 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEON SNAKE // CYBERPUNK</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="scanlines"></div>
-  <div class="vignette"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#060914" />
+    <meta name="description" content="Neon Snake — cyberpunkowa gra Snake w czystym HTML, CSS i JavaScript." />
+    <title>Neon Snake // Cyber Grid</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar" aria-label="Nagłówek gry">
+        <a class="brand" href="./" aria-label="Neon Snake — strona główna">
+          <span class="brand-mark" aria-hidden="true">//</span>
+          <span>
+            <strong>NEON SNAKE</strong>
+            <small>CYBER GRID / 2049</small>
+          </span>
+        </a>
+        <div class="topbar-status" aria-label="Status systemu">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span>SYSTEM ONLINE</span>
+        </div>
+      </header>
 
-  <div class="app">
-    <header class="hud">
-      <div class="brand">
-        <span class="logo-mark">◈</span>
-        <div>
-          <h1>NEON<span>SNAKE</span></h1>
-          <p class="tag">SECTOR 7 • GRID PROTOCOL</p>
-        </div>
-      </div>
-      <div class="stats">
-        <div class="stat">
-          <span class="label">SCORE</span>
-          <span class="value" id="score">0000</span>
-        </div>
-        <div class="stat accent">
-          <span class="label">RECORD</span>
-          <span class="value" id="highscore">0000</span>
-        </div>
-        <div class="stat">
-          <span class="label">SPEED</span>
-          <span class="value" id="speed">01</span>
-        </div>
-      </div>
-    </header>
+      <main class="game-layout">
+        <section class="intro-panel" aria-labelledby="game-title">
+          <p class="eyebrow">[ ARCADE PROTOCOL 07 ]</p>
+          <h1 id="game-title">Own the<br /><span>grid.</span></h1>
+          <p class="intro-copy">Przeprogramuj węża, zbieraj rdzenie energii i nie dotknij własnego śladu.</p>
 
-    <main class="stage">
-      <div class="frame">
-        <canvas id="game" width="600" height="600" tabindex="0" aria-label="Neon Snake"></canvas>
-        <div class="overlay" id="overlay">
-          <div class="panel" id="panel">
-            <p class="status" id="status">SYSTEM READY</p>
-            <h2 id="title">NEON SNAKE</h2>
-            <p class="hint" id="hint">
-              STRZAŁKI / WASD — ruch<br />
-              SWIPE LUB TAP W STREFĘ EKRANU<br />
-              SPACJA — pauza / start
-            </p>
-            <button type="button" id="startBtn">INICJUJ SEKWENCJĘ</button>
+          <div class="key-hint" aria-label="Skróty klawiszowe">
+            <span class="key-hint-icon" aria-hidden="true">⌘</span>
+            <span><b>STEROWANIE</b><br />Strzałki / WASD <i>·</i> P pauza</span>
           </div>
-        </div>
-      </div>
-    </main>
 
-    <footer class="footer">
-      <span>EAT THE CORE • AVOID THE TRACE</span>
-      <span id="statusLine">STAN: GOTOWY</span>
-    </footer>
-  </div>
+          <div class="control-legend">
+            <span><i class="legend-dot food-dot"></i> rdzeń energii</span>
+            <span><i class="legend-dot snake-dot"></i> twój ślad</span>
+          </div>
+        </section>
 
-  <script src="game.js"></script>
-</body>
+        <section class="game-panel" aria-label="Plansza gry Snake">
+          <div class="game-panel-header">
+            <div>
+              <span class="panel-label">LIVE FEED</span>
+              <span class="panel-divider">/</span>
+              <span id="game-mode">READY STATE</span>
+            </div>
+            <div class="session-id">SESSION <span id="session-id">0000</span></div>
+          </div>
+
+          <div class="canvas-frame">
+            <canvas id="game-canvas" width="720" height="720" tabindex="0" aria-label="Plansza gry Snake. Użyj strzałek lub WASD, aby sterować."></canvas>
+            <div class="canvas-corner corner-tl" aria-hidden="true"></div>
+            <div class="canvas-corner corner-tr" aria-hidden="true"></div>
+            <div class="canvas-corner corner-bl" aria-hidden="true"></div>
+            <div class="canvas-corner corner-br" aria-hidden="true"></div>
+            <div class="game-overlay" id="game-overlay">
+              <span class="overlay-kicker" id="overlay-kicker">SYSTEM READY</span>
+              <strong id="overlay-title">ENTER THE GRID</strong>
+              <span id="overlay-copy">Naciśnij Enter lub kliknij przycisk, aby rozpocząć.</span>
+              <button class="primary-button overlay-button" id="overlay-button" type="button">START RUN <span>↗</span></button>
+            </div>
+          </div>
+
+          <div class="game-panel-footer">
+            <div class="live-indicator"><span class="pulse-dot" aria-hidden="true"></span><span id="status-text" role="status" aria-live="polite">Oczekiwanie na start</span></div>
+            <div class="grid-coordinates" id="grid-coordinates">GRID 24 × 24</div>
+          </div>
+        </section>
+
+        <aside class="stats-panel" aria-label="Statystyki gry">
+          <div class="score-card featured-stat">
+            <span class="stat-label">CURRENT SCORE</span>
+            <strong id="score">000</strong>
+            <span class="stat-unit">PTS</span>
+            <div class="score-bar" aria-hidden="true"><span id="score-bar-fill"></span></div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">HIGH SCORE</span>
+            <strong id="high-score">000</strong>
+            <span class="stat-accent">LOCAL MEMORY</span>
+          </div>
+          <div class="stat-card compact-stat">
+            <div><span class="stat-label">LENGTH</span><strong id="length">03</strong></div>
+            <div><span class="stat-label">SPEED</span><strong id="speed">01</strong></div>
+          </div>
+
+          <button class="primary-button full-width" id="start-button" type="button">START RUN <span>↗</span></button>
+          <button class="ghost-button full-width" id="pause-button" type="button" disabled>PAUSE <span>Ⅱ</span></button>
+
+          <div class="mobile-controls" aria-label="Dotykowe sterowanie">
+            <button type="button" class="direction-button up" data-direction="up" aria-label="Góra">↑</button>
+            <button type="button" class="direction-button left" data-direction="left" aria-label="Lewo">←</button>
+            <button type="button" class="direction-button down" data-direction="down" aria-label="Dół">↓</button>
+            <button type="button" class="direction-button right" data-direction="right" aria-label="Prawo">→</button>
+          </div>
+
+          <p class="tip"><span>TIP //</span> Zbieraj kolejne rdzenie, aby przyspieszyć. Rekord zapisuje się automatycznie.</p>
+        </aside>
+      </main>
+
+      <footer class="footer-bar">
+        <span>NEON SNAKE / BUILD 1.0.0</span>
+        <span>LOCAL STORAGE <b>●</b></span>
+      </footer>
+    </div>
+    <script src="script.js"></script>
+  </body>
 </html>
